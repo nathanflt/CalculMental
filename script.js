@@ -128,14 +128,14 @@ function startGame(level) {
     updateStats();
     generateQuestion();
     
-    if (gameMode === 'classic') {
-        startTimer();
-    } else if (gameMode === 'training') {
+    // Le timer sera démarré par generateQuestion() via resetTimer() pour le mode classique
+    if (gameMode === 'training') {
         // Pas de timer en mode entraînement
         document.getElementById('timer').textContent = correctAnswers;
-    } else {
+    } else if (gameMode.startsWith('chrono')) {
         startGlobalTimer();
     }
+    // Ne PAS démarrer startTimer() ici car generateQuestion() le fera
 }
 
 // Générer une question
@@ -511,6 +511,9 @@ function checkAnswer() {
 
 // Bonne réponse
 function correctAnswer() {
+    // Arrêter le timer immédiatement
+    clearInterval(timerInterval);
+    
     correctAnswers++;
     score += 10 + (currentLevel * 5);
     showFeedback('✓ Correct !', 'correct');
@@ -524,6 +527,9 @@ function correctAnswer() {
 
 // Mauvaise réponse
 function wrongAnswer() {
+    // Arrêter le timer immédiatement pour éviter les appels multiples
+    clearInterval(timerInterval);
+    
     if (gameMode !== 'training') {
         lives--;
     }
