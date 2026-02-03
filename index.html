@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#302b63">
+    <title>Calcul Mental</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="night-mode">
+    <button class="theme-toggle" onclick="toggleTheme()">☀️ / 🌙</button>
+
+    <div class="container">
+        <h1>⚡ CALCUL MENTAL ⚡</h1>
+
+        <!-- Sélection niveau d'étude -->
+        <div class="study-level-selection" id="studyLevelSelection">
+            <h2 style="color: white; text-align: center; margin-bottom: 30px;">Quel est ton niveau d'étude ?</h2>
+            <button class="level-btn level-1" onclick="selectStudyLevel('primaire')">
+                <span>🎒 Primaire<br><small>CP à CM2</small></span>
+            </button>
+            <button class="level-btn level-2" onclick="selectStudyLevel('college')">
+                <span>📚 Collège<br><small>6ème à 3ème</small></span>
+            </button>
+            <button class="level-btn level-3" onclick="selectStudyLevel('lycee')">
+                <span>🎓 Lycée<br><small>Seconde à Terminale</small></span>
+            </button>
+            <button class="level-btn level-4" onclick="selectStudyLevel('superieur')">
+                <span>🔬 Études Supérieures<br><small>Université / École</small></span>
+            </button>
+        </div>
+
+        <!-- Sélection mode de jeu -->
+        <div class="game-mode-selection" id="gameModeSelection" style="display: none;">
+            <button class="btn btn-back" onclick="backToStudyLevel()" style="margin-bottom: 20px;">← Changer de niveau d'étude</button>
+            <h2 style="color: white; text-align: center; margin-bottom: 30px;">Choisis ton mode de jeu :</h2>
+            
+            <button class="level-btn level-1" onclick="selectGameMode('classic')">
+                <span>⚡ Mode Classique<br><small>3 vies • Timer 15s par question</small></span>
+            </button>
+            
+            <button class="level-btn level-2" onclick="selectGameMode('chrono60')">
+                <span>⏱️ Chrono 60s<br><small>Maximum de bonnes réponses en 1 minute</small></span>
+            </button>
+            
+            <button class="level-btn level-3" onclick="selectGameMode('chrono90')">
+                <span>⏱️ Chrono 1min30<br><small>Maximum de bonnes réponses en 1 minute 30</small></span>
+            </button>
+            
+            <button class="level-btn level-4" onclick="selectGameMode('chrono180')">
+                <span>⏱️ Chrono 3min<br><small>Maximum de bonnes réponses en 3 minutes</small></span>
+            </button>
+            
+            <button class="level-btn" style="background: linear-gradient(45deg, #159957, #155799); box-shadow: 0 0 20px rgba(21, 153, 87, 0.5);" onclick="selectGameMode('training')">
+                <span>🎯 Mode Entraînement<br><small>Sans chrono • Sans vies • Sans stress</small></span>
+            </button>
+        </div>
+
+        <!-- Menu de sélection niveau de difficulté -->
+        <div class="menu" id="menu" style="display: none;">
+            <button class="btn btn-back" onclick="backToGameMode()" style="margin-bottom: 20px;">← Changer de mode</button>
+            <h2 style="color: white; text-align: center; margin-bottom: 30px;">Choisis ton niveau :</h2>
+            <button class="level-btn level-1" onclick="startGame(1)">
+                <span id="level1Desc">🟢 Niveau 1 - Facile</span>
+            </button>
+            <button class="level-btn level-2" onclick="startGame(2)">
+                <span id="level2Desc">🟡 Niveau 2 - Moyen</span>
+            </button>
+            <button class="level-btn level-3" onclick="startGame(3)">
+                <span id="level3Desc">🟠 Niveau 3 - Difficile</span>
+            </button>
+            <button class="level-btn level-4" onclick="startGame(4)">
+                <span id="level4Desc">🔴 Niveau 4 - Expert</span>
+            </button>
+            
+            <div style="margin-top: 30px; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 10px;">
+                <h3 style="color: white; margin-bottom: 10px;">📊 Meilleurs Scores</h3>
+                <div id="records" style="color: rgba(255,255,255,0.8);"></div>
+            </div>
+        </div>
+
+        <!-- Zone de jeu -->
+        <div class="game-area" id="gameArea">
+            <div class="timer-bar" id="timerBar">
+                <div class="timer-fill" id="timerFill"></div>
+            </div>
+
+            <div class="stats">
+                <div class="stat-box">
+                    <div class="stat-label">Score</div>
+                    <div class="stat-value" id="score">0</div>
+                </div>
+                <div class="stat-box" id="livesBox">
+                    <div class="stat-label">Vies</div>
+                    <div class="stat-value hearts" id="lives">❤️❤️❤️</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label" id="timerLabel">Temps</div>
+                    <div class="stat-value" id="timer">15</div>
+                </div>
+            </div>
+
+            <div class="question-box">
+                <div class="question" id="question">5 + 3 = ?</div>
+                <input type="number" 
+                       inputmode="numeric" 
+                       pattern="[0-9]*"
+                       class="answer-input" 
+                       id="answerInput" 
+                       placeholder="?" 
+                       autocomplete="off"
+                       autofocus>
+            </div>
+
+            <div style="text-align: center;">
+                <button class="btn btn-submit" onclick="checkAnswer()">✓ Valider</button>
+                <button class="btn btn-back" onclick="backToMenu()">← Retour</button>
+            </div>
+
+            <div class="feedback" id="feedback"></div>
+        </div>
+
+        <!-- Game Over -->
+        <div class="game-over" id="gameOver">
+            <h2>🎮 GAME OVER 🎮</h2>
+            <div class="final-score">Score final: <span id="finalScore">0</span></div>
+            <div class="record" id="recordMessage"></div>
+            <button class="btn btn-submit" onclick="backToMenu()" style="margin-top: 30px;">🔄 Rejouer</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
